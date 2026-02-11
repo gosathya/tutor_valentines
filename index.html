@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Tutor Valentines</title>
 
+  <!-- Open Graph (Slack/FB/LinkedIn previews) -->
   <meta property="og:title" content="Tutor Valentines" />
   <meta property="og:description" content="will you be my Valentine? ❤️" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tutorvalentines.vercel.app/" />
-
-  <!-- Must be an absolute URL -->
   <meta property="og:image" content="https://tutorvalentines.vercel.app/og.png" />
+  <!-- Optional but nice -->
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
 
+  <!-- Twitter (also used by some crawlers) -->
   <meta name="twitter:card" content="summary_large_image" />
-
-  
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Be My Valentine 💘</title>
+  <meta name="twitter:title" content="Tutor Valentines" />
+  <meta name="twitter:description" content="will you be my Valentine? ❤️" />
+  <meta name="twitter:image" content="https://tutorvalentines.vercel.app/og.png" />
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
@@ -184,7 +184,6 @@
 </head>
 
 <body>
-
   <div class="card">
     <div class="emoji">🐱❤️</div>
     <h2>Tutor,<br>will you be my Valentine?</h2>
@@ -208,9 +207,10 @@
     const hoverSound = document.getElementById("hoverSound");
     const yesSound = document.getElementById("yesSound");
 
+    // Move the "No" button on hover (desktop)
     noBtn.addEventListener("mouseenter", () => {
       hoverSound.currentTime = 0;
-      hoverSound.play();
+      hoverSound.play().catch(() => { /* ignore autoplay blocking */ });
 
       const cardRect = card.getBoundingClientRect();
       const btnRect = noBtn.getBoundingClientRect();
@@ -218,18 +218,37 @@
       const maxX = cardRect.width - btnRect.width - 10;
       const maxY = cardRect.height - btnRect.height - 10;
 
-      noBtn.style.left = Math.random() * maxX + "px";
-      noBtn.style.top = Math.random() * maxY + "px";
+      noBtn.style.left = Math.max(0, Math.random() * maxX) + "px";
+      noBtn.style.top  = Math.max(0, Math.random() * maxY) + "px";
     });
 
-    yesBtn.addEventListener("click", () => {
-      yesSound.play();
+    // Also move on tap (mobile)
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      hoverSound.currentTime = 0;
+      hoverSound.play().catch(() => {});
 
-      confetti({
-        particleCount: 260,
-        spread: 120,
-        origin: { y: 0.65 }
-      });
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = cardRect.width - btnRect.width - 10;
+      const maxY = cardRect.height - btnRect.height - 10;
+
+      noBtn.style.left = Math.max(0, Math.random() * maxX) + "px";
+      noBtn.style.top  = Math.max(0, Math.random() * maxY) + "px";
+    }, { passive: false });
+
+    yesBtn.addEventListener("click", () => {
+      yesSound.play().catch(() => {});
+
+      // Confetti burst
+      if (typeof confetti === "function") {
+        confetti({
+          particleCount: 260,
+          spread: 120,
+          origin: { y: 0.65 }
+        });
+      }
 
       setTimeout(() => {
         alert("YAY 💕 I can’t wait for Valentine’s Day with you!");
@@ -241,9 +260,9 @@
       heart.className = "heart";
       heart.innerHTML = Math.random() > 0.5 ? "❤️" : "💗";
       heart.style.left = Math.random() * 100 + "vw";
-      heart.style.fontSize = Math.random() * 22 + 14 + "px";
-      heart.style.animationDuration = Math.random() * 3 + 4 + "s";
-      heart.style.opacity = Math.random() * 0.5 + 0.4;
+      heart.style.fontSize = (Math.random() * 22 + 14) + "px";
+      heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+      heart.style.opacity = (Math.random() * 0.5 + 0.4);
 
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 8000);
@@ -251,9 +270,9 @@
 
     setInterval(createHeart, 380);
   </script>
-
 </body>
 </html>
+
 
 </body>
 </html>
